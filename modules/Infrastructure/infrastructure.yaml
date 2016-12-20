@@ -84,9 +84,6 @@ Resources:
         - EIP
         - AllocationId
       SubnetId: !Ref 'PublicSubnetAZ1'
-      Tags:
-        - Key: Name
-          Value: !Ref 'TagName'
   ECSRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
