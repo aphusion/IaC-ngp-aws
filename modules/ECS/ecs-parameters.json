@@ -1,38 +1,38 @@
 [ 
 	{
 		"ParameterKey":"VpcId",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"VpcId"
 	},
 	{
 		"ParameterKey":"PrivateSubnetAZ1",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"PrivateSubnetAZ1"
 	},
 	{
 	 	"ParameterKey":"PrivateSubnetAZ2",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"PrivateSubnetAZ2"
 	},
 	{
 		"ParameterKey":"SecurityGroup",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"SecurityGroup"
 	},
 	{
 		"ParameterKey":"KeyName",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"KeyName"
 	}
 	{
 		"ParameterKey":"ClusterName",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"ClusterName"
 	},
 	{
 		"ParameterKey":"AsgDesiredCapacity",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"AsgDesiredCapacity"
 	},
 	{
 		"ParameterKey":"AsgMaxSize",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"AsgMaxSize"
 	},
 	{
 		"ParameterKey":"InstanceType",
-	 	"ParameterValue":"tag-name"
+	 	"ParameterValue":"InstanceType"
 	}
 ]

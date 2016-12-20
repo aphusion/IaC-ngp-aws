@@ -1,0 +1,10 @@
+[ 
+	{
+		"ParameterKey":"ECSCluster",
+	 	"ParameterValue":"ECSCluster"
+	},
+	{
+		"ParameterKey":"TaskDefinition",
+	 	"ParameterValue":"TaskDefinition"
+	}
+]
