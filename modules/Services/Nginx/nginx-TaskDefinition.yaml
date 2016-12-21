@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
+      RetentionInDays: 14
+  Nginxtaskdefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: Nginx-ng
+      ContainerDefinitions:
+      - Name: nginx
+        Cpu: '10'
+        Essential: 'true'
+        Image: nginx
+        Memory: '300'
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: nginx
+        PortMappings:
+        - ContainerPort: 80
+          HostPort: 80
+      Volumes:
+      - Name: my-vol
+Outputs:
+  taskdef:
+    Value: !Ref 'Nginxtaskdefinition'

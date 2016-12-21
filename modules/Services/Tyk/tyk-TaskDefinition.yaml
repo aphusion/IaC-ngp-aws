@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  CloudwatchLogsGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
+      RetentionInDays: 14
+  Tyktaskdefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: Tyk
+      ContainerDefinitions:
+      - Name: tyk-hybrid
+        Cpu: '1024'
+        Essential: 'true'
+        Image: tykio/tyk-hybrid-docker
+        Memory: '1024'
+        LogConfiguration:
+          LogDriver: awslogs
+          Options:
+            awslogs-group: !Ref 'CloudwatchLogsGroup'
+            awslogs-region: !Ref 'AWS::Region'
+            awslogs-stream-prefix: tyk
+        PortMappings:
+        - ContainerPort: 8181
+          HostPort: 8181
+        - ContainerPort: 9090
+          HostPort: 9090
+        Environment:
+        - Name: APIKEY
+          Value: api_key
+        - Name: BINDSLUG
+          Value: 1
+        - Name: DISABLENGINX
+          Value: 1
+        - Name: PORT
+          Value: 8181
+        - Name: REDISHOST
+          Value: resdis_host_name
+        - Name: RPORT
+          Value: 6379
+        - Name: SECRET
+          Value: secret
+      Volumes:
+      - Name: my-vol
+Outputs:
+  taskdef:
+    Value: !Ref 'Tyktaskdefinition'

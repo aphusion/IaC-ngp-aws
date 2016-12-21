@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  VpcId:
+    Type: List<AWS::EC2::VPC::Id>
+    Description: Id of an existing VPC to create the ECS cluster
+  PrivateSubnetAZ1:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Id of the Private Subnet in AvailabilityZone 1
+  PrivateSubnetAZ2:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: Id of the Private Subnet in AvailabilityZone 2
+  SecurityGroup:
+    Type: List<AWS::EC2::SecurityGroup::Id>
+    Description: Security Groups that can be used to access EC2 Instances
+  KeyName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.
+  ClusterName:
+    Type: String
+    Description: Name of ECS Cluster
+  AsgDesiredCapacity:
+    Type: Number
+    Default: '1'
+    Description: Number of instances to launch in your ECS cluster.
+  AsgMaxSize:
+    Type: Number
+    Default: '1'
+    Description: Maximum number of instances that can be launched in your ECS cluster.
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t2.micro
+    AllowedValues: [t2.micro, t2.small, t2.medium, t2.large]
+    ConstraintDescription: Please choose a valid instance type.
+Mappings:
+  AWSRegionToAMI:
+    ap-southeast-1:
+      AMIID: ami-a900a3ca
+    ap-southeast-2:
+      AMIID: ami-5781be34
+Resources:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+     ClusterName: !Ref 'ClusterName'
+  ECSAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier:
+        - !Ref 'PrivateSubnetAZ1'
+        - !Ref 'PrivateSubnetAZ2'
+      LaunchConfigurationName: !Ref 'ECSAutoscalingLC'
+      MinSize: '1'
+      MaxSize: !Ref 'AsgMaxSize'
+      DesiredCapacity: !Ref 'AsgDesiredCapacity'
+  ECSAutoscalingLC:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      AssociatePublicIpAddress: true
+      ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
+      SecurityGroups: [!Ref 'SecurityGroup']
+      InstanceType: !Ref 'InstanceType'
+      IamInstanceProfile: !Ref 'EC2InstanceProfile'
+      KeyName: !Ref 'KeyName'
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash -xe
+          echo ECS_CLUSTER=${ECSCluster} >> /etc/ecs/ecs.config
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [ec2.amazonaws.com]
+          Action: ['sts:AssumeRole']
+      Path: /
+  ECSServicePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties: 
+      PolicyName: "root"
+      PolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: Allow
+            Action: ['ecs:*', 'logs:*']
+            Resource: '*'
+      Roles: [!Ref 'EC2Role']
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles: [!Ref 'EC2Role']

@@ -1,0 +1,22 @@
+[ 
+	{
+		"ParameterKey":"ECSCluster",
+	 	"ParameterValue":"ECSCluster"
+	},
+	{
+		"ParameterKey":"TaskDefinition",
+	 	"ParameterValue":"TaskDefinition"
+	},
+	{
+		"ParameterKey":"PublicSubnetAZ1",
+	 	"ParameterValue":"PublicSubnetAZ1"
+	},
+	{
+		"ParameterKey":"PublicSubnetAZ2",
+	 	"ParameterValue":"PublicSubnetAZ2"
+	},
+	{
+		"ParameterKey":"SecurityGroup",
+	 	"ParameterValue":"SecurityGroup"
+	}
+]
