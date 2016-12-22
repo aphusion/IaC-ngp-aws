@@ -3,9 +3,6 @@ Parameters:
   TagName:
     Type: String
     Description: Provide a Tag name to identify the Infrastructure
-  SecurityGroup:
-    Type: AWS::EC2::SecurityGroup::Id
-    Description: Security Groups that can be used to access EC2 Instances
   KeyName:
     Type: AWS::EC2::KeyPair::KeyName
     Description: Name of an existing EC2 KeyPair to enable SSH access to the ECS instances.
