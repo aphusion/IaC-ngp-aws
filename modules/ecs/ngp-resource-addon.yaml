@@ -1,0 +1,6 @@
+  Infrastructure:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/${S3BucketName}/templates/ecs-cluster.yaml
+      Parameters:
+        TagName: !Ref 'TagName'

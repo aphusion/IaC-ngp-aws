@@ -1,11 +1,5 @@
-Description: >
+Description:
   This template illustrates how to use AWS Cloudformation to create NGP infrastructure and pluggable modules.
-
-Parameters:
-  Parameters:
-  TagName:
-    Type: String
-    Description: Provide a Tag name to identify the Infrastructure
 
 Metadata:
   AWS::CloudFormation::Interface:

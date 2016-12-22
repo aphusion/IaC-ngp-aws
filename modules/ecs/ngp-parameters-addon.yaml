@@ -1,0 +1,3 @@
+  TagName:
+    Type: String
+    Description: Provide a Tag name to identify the Infrastructure
