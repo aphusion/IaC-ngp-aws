@@ -5,7 +5,7 @@ Parameters:
     Type: String
     Description: Provide a Tag name to identify the Infrastructure
 Resources:
-  EcsVpc:
+  VPC:
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: 10.0.0.0/16
@@ -20,7 +20,7 @@ Resources:
           - 0
           - Fn::GetAZs: ""
       CidrBlock: 10.0.1.0/24
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
       Tags:
         - Key: Name
           Value: !Join ['', [!Ref 'TagName', '-PublicSubnetAZ1']]
@@ -32,7 +32,7 @@ Resources:
           - 1
           - Fn::GetAZs: ""
       CidrBlock: 10.0.2.0/24
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
       Tags:
         - Key: Name
           Value: !Join ['', [!Ref 'TagName', '-PublicSubnetAZ2']]
@@ -44,7 +44,7 @@ Resources:
           - 0
           - Fn::GetAZs: ""
       CidrBlock: 10.0.3.0/24
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
       Tags:
         - Key: Name
           Value: !Join ['', [!Ref 'TagName', '-PrivateSubnetAZ1']]
@@ -56,7 +56,7 @@ Resources:
           - 1
           - Fn::GetAZs: ""
       CidrBlock: 10.0.4.0/24
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
       Tags:
         - Key: Name
           Value: !Join ['', [!Ref 'TagName', '-PrivateSubnetAZ2']]
@@ -70,7 +70,7 @@ Resources:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
       InternetGatewayId: !Ref 'ECSInternetGateway'
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
   EIP:
     Type: AWS::EC2::EIP
     Properties:
@@ -87,11 +87,11 @@ Resources:
   ECSRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
   ECSPrivateRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
   ECSRoute:
     Type: AWS::EC2::Route
     Properties:
@@ -138,7 +138,15 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Public Security Group
-      VpcId: !Ref 'EcsVpc'
+      VpcId: !Ref 'VPC'
+      Tags:
+        - Key: Name
+          Value: !Ref 'TagName'
+  PrivateSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Private Security Group
+      VpcId: !Ref 'VPC'
       Tags:
         - Key: Name
           Value: !Ref 'TagName'
@@ -158,3 +166,80 @@ Resources:
       FromPort: '22'
       ToPort: '22'
       CidrIp: 0.0.0.0/0
+  PrivateSecurityGroupHTTPinbound:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'PublicSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '80'
+      ToPort: '80'
+      CidrIp: 0.0.0.0/0
+  PrivateSecurityGroupSSHinbound:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'PublicSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '22'
+      ToPort: '22'
+      CidrIp: 0.0.0.0/0
+Outputs:
+  Tag:
+    Description: Tag name
+    Value: 
+      Ref: TagName
+    Export:
+      Name:
+        Fn::Sub: "${TagName}"
+  VPCId:
+    Description: VPC ID
+    Value:
+      Ref: VPC
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-VpcId"
+  PublicSubnetAZ1:
+    Description: The subnet ID to use for public web servers
+    Value:
+      Ref: PublicSubnetAZ1
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PublicSubnetAZ1ID"
+  PublicSubnetAZ2:
+    Description: The subnet ID to use for public web servers
+    Value:
+      Ref: PublicSubnetAZ2
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PublicSubnetAZ2ID"
+  PrivateSubnetAZ1:
+    Description: The subnet ID to use for public web servers
+    Value:
+      Ref: PublicSubnetAZ2
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PrivateSubnetAZ1ID"
+  PrivateSubnetAZ2:
+    Description: The subnet ID to use for public web servers
+    Value:
+      Ref: PublicSubnetAZ2
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PrivateSubnetAZ2ID"
+  PublicSecurityGroup:
+    Description: The security group ID to use for public servers
+    Value:
+      Fn::GetAtt:
+      - PublicSecurityGroup
+      - GroupId
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PublicSecurityGroupID"
+  PrivateSecurityGroup:
+    Description: The security group ID to use for private servers
+    Value:
+      Fn::GetAtt:
+      - PrivateSecurityGroup
+      - GroupId
+    Export:
+      Name:
+        Fn::Sub: "${TagName}-PrivateSecurityGroupID"

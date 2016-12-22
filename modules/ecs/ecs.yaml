@@ -1,14 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-  VpcId:
-    Type: AWS::EC2::VPC::Id
-    Description: Id of an existing VPC to create the ECS cluster
-  PrivateSubnetAZ1:
-    Type: AWS::EC2::Subnet::Id
-    Description: Id of the Private Subnet in AvailabilityZone 1
-  PrivateSubnetAZ2:
-    Type: AWS::EC2::Subnet::Id
-    Description: Id of the Private Subnet in AvailabilityZone 2
+  TagName:
+    Type: String
+    Description: Provide a Tag name to identify the Infrastructure
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: Security Groups that can be used to access EC2 Instances
@@ -20,11 +14,11 @@ Parameters:
     Description: Name of ECS Cluster
   AsgDesiredCapacity:
     Type: Number
-    Default: '1'
+    Default: '2'
     Description: Number of instances to launch in your ECS cluster.
   AsgMaxSize:
     Type: Number
-    Default: '1'
+    Default: '3'
     Description: Maximum number of instances that can be launched in your ECS cluster.
   InstanceType:
     Description: EC2 instance type
@@ -47,8 +41,10 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
-        - !Ref 'PrivateSubnetAZ1'
-        - !Ref 'PrivateSubnetAZ2'
+        - Fn::ImportValue:
+            Fn::Sub: "${TagName}-PrivateSubnetAZ1ID"
+        - Fn::ImportValue:
+            Fn::Sub: "${TagName}-PrivateSubnetAZ2ID"
       LaunchConfigurationName: !Ref 'ECSAutoscalingLC'
       MinSize: '1'
       MaxSize: !Ref 'AsgMaxSize'
@@ -58,7 +54,9 @@ Resources:
     Properties:
       AssociatePublicIpAddress: true
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
-      SecurityGroups: [!Ref 'SecurityGroup']
+      SecurityGroups:
+        - Fn::ImportValue:
+            Fn::Sub: "${TagName}-PrivateSecurityGroupID"
       InstanceType: !Ref 'InstanceType'
       IamInstanceProfile: !Ref 'EC2InstanceProfile'
       KeyName: !Ref 'KeyName'
