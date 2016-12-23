@@ -3,7 +3,7 @@ Parameters:
   TagName:
     Type: String
     Description: Tag Name of your Infrastructure. 
-  ECSCluster:
+  ECSClusterName:
     Type: String
     Description: Name of an existing ECS Cluster.
 Resources:
@@ -36,7 +36,7 @@ Resources:
   NginxService:
     Type: AWS::ECS::Service
     Properties:
-      Cluster: !Ref 'ECSCluster'
+      Cluster: !Ref 'ECSClusterName'
       DesiredCount: '1'
       TaskDefinition: !Ref 'Nginxtaskdefinition'
 Outputs:

@@ -214,7 +214,7 @@ Outputs:
   PrivateSubnetAZ1:
     Description: The subnet ID to use for public web servers
     Value:
-      Ref: PrivateSubnetAZ2
+      Ref: PrivateSubnetAZ1
     Export:
       Name:
         Fn::Sub: "${TagName}-PrivateSubnetAZ1ID"

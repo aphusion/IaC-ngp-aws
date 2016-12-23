@@ -3,9 +3,9 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-modules=("ecs")
-services=("nginx" "tyk")
+modules=("ecs" "nginx" "tyk")
 VERSION=master
+git checkout .
 echo -e "\nPlease specify the preferred version of the application (Leave empty for the master version).
 You can find the latest release version here.${GREEN}https://github.com/microservices-today/IaC-ngp-aws/releases.${NC}"
 read VERSION
@@ -26,20 +26,7 @@ do
      cat modules/${module}/ngp-resource-addon.yaml >> ngp-resources.yaml
    fi
 done
-echo -e "Do you want to create ${GREEN}Services${NC} on the cluster ? y/n"
-read ANS
-if [ ${ANS} == 'y' ]
-  then
-   for service in "${services[@]}"
-	 do
-	   echo -e "Do you want to run ${GREEN}$service${NC} ? y/n"
-	   read ANS
-	   if [ ${ANS} == 'y' ]
-	   then
-	   aws cloudformation create-stack --stack-name $service-stack --template-body file://modules/$module/$service/${service}.yaml --parameters file://modules/$module/$service/${service}-parameters.json --capabilities CAPABILITY_IAM
-	   fi
-	 done
-fi
+
 cat ngp-parameters.yaml >> ngp-stack.yaml
 cat ngp-resources.yaml >> ngp-stack.yaml
 
@@ -57,4 +44,12 @@ aws s3 cp --recursive modules/ "s3://${S3_BUCKET_NAME}/templates" --acl public-r
 
 echo -e "Enter the AWS REGION to deploy the Cloudformation Stack"
 read AWS_REGION
-echo -e "${GREEN}https://console.aws.amazon.com/cloudformation/home?region=${AWS_REGION}#/stacks/new?stackName=ecs-continuous-deployment&templateURL=https://s3.amazonaws.com/${S3_BUCKET_NAME}/ngp-stack.yaml${NC}"
+URL="https://console.aws.amazon.com/cloudformation/home?region=${AWS_REGION}#/stacks/new?stackName=ecs-continuous-deployment&templateURL=https://s3.amazonaws.com/${S3_BUCKET_NAME}/ngp-stack.yaml"
+echo -e "Open the Link in Browser --- ${GREEN}${URL}${NC}"
+if which xdg-open > /dev/null
+then
+  xdg-open $URL
+elif which gnome-open > /dev/null
+then
+  gnome-open $URL
+fi
