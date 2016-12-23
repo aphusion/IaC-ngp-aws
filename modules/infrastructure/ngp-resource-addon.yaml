@@ -1,0 +1,6 @@
+  Infrastructure:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/S3_BUCKET_NAME/templates/infrastructure/infrastructure.yaml
+      Parameters:
+        TagName: !Ref 'TagName'

@@ -3,9 +3,18 @@ Parameters:
   TagName:
     Type: String
     Description: TagName of your Infrastructure.
-  ECSCluster:
+  ECSClusterName:
     Type: String
     Description: Name of an existing ECS Cluster.
+  PrivateSubnetAZ1:
+    Description: Availability Zone ID private subnet 1.
+    Type: String
+  PrivateSubnetAZ2:
+    Description: Availability Zone ID private subnet 2.
+    Type: String
+  PrivateSecurityGroupID:
+    Description: Private Security Group ID for instances.
+    Type: String
 Resources:
   CloudwatchLogsGroup:
     Type: AWS::Logs::LogGroup
@@ -54,7 +63,7 @@ Resources:
     Type: AWS::ECS::Service
     DependsOn: ALBListener
     Properties:
-      Cluster: !Ref 'ECSCluster'
+      Cluster: !Ref 'ECSClusterName'
       DesiredCount: '1'
       LoadBalancers:
       - ContainerName: tyk-hybrid
@@ -92,13 +101,10 @@ Resources:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
       Subnets: 
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PublicSubnetAZ1ID"
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PublicSubnetAZ2ID"
+        - !Ref PrivateSubnetAZ1
+        - !Ref PrivateSubnetAZ2
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PublicSecurityGroupID"
+        - !Ref PrivateSecurityGroupID
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     DependsOn: ECSServiceRole
