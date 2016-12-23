@@ -25,9 +25,9 @@
 1. Ensure the access from terminal, check with `aws s3 ls`.
 2. If there are errors regarding AMI's , please search for community ami's with `amazon-ecs-optimized` and update mappings in `modules/ecs/ecs.yaml`.
 
-### Components
+# Components
 
-#### ECS
+## ECS
 
 Amazon EC2 Container Service (Amazon ECS) is a container management service that makes it easy to run, stop, and manage Docker containers on a cluster of Amazon Elastic Compute Cloud (Amazon EC2) instances.
 
@@ -60,3 +60,6 @@ It add permissions to EC2Role.
 #### EC2InstanceProfile
 
 An instance profile is a container for an IAM role that you can use to pass role information to an EC2 instance when the instance starts.
+## Tyk
+
+Once the TYK definition are created, we need to manually give the Tyk Credentials to activate Tyk.
