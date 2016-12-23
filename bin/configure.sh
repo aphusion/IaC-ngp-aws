@@ -43,16 +43,18 @@ fi
 cat ngp-parameters.yaml >> ngp-stack.yaml
 cat ngp-resources.yaml >> ngp-stack.yaml
 
-BUCKET_NAME=sample
+S3_BUCKET_NAME=sample
 echo -e "Enter the name for s3 bucket to store the Cloudformation Templates"
-read BUCKET_NAME
+read S3_BUCKET_NAME
+
+sed -i "s@S3_BUCKET_NAME@${S3_BUCKET_NAME}@g" ngp-stack.yaml
 
 zip deploy/templates.zip ngp-stack.yaml modules/**/*.yaml
 
-aws s3 cp deploy/templates.zip "s3://${BUCKET_NAME}" --acl public-read
-aws s3 cp ngp-stack.yaml "s3://${BUCKET_NAME}" --acl public-read
-aws s3 cp --recursive modules/ "s3://${BUCKET_NAME}/templates" --acl public-read
+aws s3 cp deploy/templates.zip "s3://${S3_BUCKET_NAME}" --acl public-read
+aws s3 cp ngp-stack.yaml "s3://${S3_BUCKET_NAME}" --acl public-read
+aws s3 cp --recursive modules/ "s3://${S3_BUCKET_NAME}/templates" --acl public-read
 
 echo -e "Enter the AWS REGION to deploy the Cloudformation Stack"
 read AWS_REGION
-echo -e "${GREEN}https://console.aws.amazon.com/cloudformation/home?region=${AWS_REGION}#/stacks/new?stackName=ecs-continuous-deployment&templateURL=https://s3.amazonaws.com/${BUCKET_NAME}/ngp-stack.yaml${NC}"
+echo -e "${GREEN}https://console.aws.amazon.com/cloudformation/home?region=${AWS_REGION}#/stacks/new?stackName=ecs-continuous-deployment&templateURL=https://s3.amazonaws.com/${S3_BUCKET_NAME}/ngp-stack.yaml${NC}"

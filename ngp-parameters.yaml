@@ -1,5 +1,2 @@
 
 Parameters:
-  S3BucketName:
-    Type: String
-    Description: Provide a bucketname

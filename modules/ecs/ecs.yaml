@@ -23,6 +23,15 @@ Parameters:
     Default: t2.micro
     AllowedValues: [t2.micro, t2.small, t2.medium, t2.large]
     ConstraintDescription: Please choose a valid instance type.
+  PrivateSubnetAZ1:
+    Description: Availability Zone ID private subnet 1.
+    Type: String
+  PrivateSubnetAZ2:
+    Description: Availability Zone ID private subnet 2.
+    Type: String
+  PrivateSecurityGroupID:
+    Description: Private Security Group ID for instances.
+    Type: String
 Mappings:
   AWSRegionToAMI:
     ap-southeast-1:
@@ -38,10 +47,8 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PrivateSubnetAZ1ID"
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PrivateSubnetAZ2ID"
+        - PrivateSubnetAZ1
+        - PrivateSubnetAZ2
       LaunchConfigurationName: !Ref 'ECSAutoscalingLC'
       MinSize: '1'
       MaxSize: !Ref 'AsgMaxSize'
@@ -52,8 +59,7 @@ Resources:
       AssociatePublicIpAddress: true
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
       SecurityGroups:
-        - Fn::ImportValue:
-            Fn::Sub: "${TagName}-PrivateSecurityGroupID"
+        - PrivateSecurityGroupID
       InstanceType: !Ref 'InstanceType'
       IamInstanceProfile: !Ref 'EC2InstanceProfile'
       KeyName: !Ref 'KeyName'

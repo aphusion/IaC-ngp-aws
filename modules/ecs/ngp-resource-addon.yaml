@@ -1,6 +1,10 @@
-  Infrastructure:
+  
+  ECS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/${S3BucketName}/templates/ecs-cluster.yaml
+      TemplateURL: https://s3.amazonaws.com/S3_BUCKET_NAME/templates/ecs/ecs.yaml
       Parameters:
         TagName: !Ref 'TagName'
+        PrivateSubnet1: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ1
+        PrivateSubnet2: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ2
+        PrivateSecurityGroupID: !GetAtt Infrastructure.Outputs.PublicSecurityGroup
