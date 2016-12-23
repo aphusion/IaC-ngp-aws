@@ -1,9 +1,16 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  TagName:
+    Type: String
+    Description: Tag Name of your Infrastructure. 
+  ECSCluster:
+    Type: String
+    Description: Name of an existing ECS Cluster.
 Resources:
   CloudwatchLogsGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Join ['-', [ECSLogGroup, !Ref 'AWS::StackName']]
+      LogGroupName: !Join ['-', [NginxLogGroup, !Ref 'AWS::StackName']]
       RetentionInDays: 14
   Nginxtaskdefinition:
     Type: AWS::ECS::TaskDefinition
@@ -14,7 +21,7 @@ Resources:
         Cpu: '10'
         Essential: 'true'
         Image: nginx
-        Memory: '300'
+        Memory: '128'
         LogConfiguration:
           LogDriver: awslogs
           Options:
@@ -26,6 +33,12 @@ Resources:
           HostPort: 80
       Volumes:
       - Name: my-vol
+  NginxService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref 'ECSCluster'
+      DesiredCount: '1'
+      TaskDefinition: !Ref 'Nginxtaskdefinition'
 Outputs:
-  taskdef:
-    Value: !Ref 'Nginxtaskdefinition'
+  ecsservice:
+    Value: !Ref 'NginxService'
