@@ -1,4 +1,4 @@
-### IaC-NGP-AWS
+## IaC NGP AWS - Next Generation platform based on AWS ECS
 
 #### Pre-requisites
 1. Install AWS CLI.
