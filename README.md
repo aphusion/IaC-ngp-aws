@@ -7,11 +7,13 @@
 #### Steps to use
 
 1. Export AWS Variables.
+
 	```
 	export AWS_ACCESS_KEY_ID="*******"
 	export AWS_SECRET_ACCESS_KEY="*******"
 	export AWS_DEFAULT_REGION="********"
 	```
+	
 2. Create an s3 Bucket from AWS Console to store the templates.
 3. Run `bash bin/configure.sh`.
 4. Click `yes` for required modules.
