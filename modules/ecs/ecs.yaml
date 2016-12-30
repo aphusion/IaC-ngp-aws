@@ -93,6 +93,46 @@ Resources:
     Properties:
       Path: /
       Roles: [!Ref 'EC2Role']
+  ECSScaleUpPolicy:
+    Type: AWS::AutoScaling::ScalingPolicy
+    Properties:
+      AdjustmentType: ChangeInCapacity
+      AutoScalingGroupName:
+        Ref: ECSAutoScalingGroup
+      Cooldown: '300'
+      ScalingAdjustment: '1'
+  ECSCPUScaleUpAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      EvaluationPeriods: '1'
+      Statistic: Average
+      Threshold: '80'
+      AlarmDescription: Alarm if ECS Cluster CPU reservation goes above 80
+      Period: '300'
+      AlarmActions: [!Ref 'ECSScaleUpPolicy']
+      Namespace: AWS/ECS
+      Dimensions:
+      - Name: ClusterName
+        Value:
+          Ref: ECSCluster
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: CPUReservation
+  ECSMemoryScaleUpAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      EvaluationPeriods: '1'
+      Statistic: Average
+      Threshold: '80'
+      AlarmDescription: Alarm if ECS Cluster Memory reservation goes above 80
+      Period: '300'
+      AlarmActions: [!Ref 'ECSScaleUpPolicy']
+      Namespace: AWS/ECS
+      Dimensions:
+      - Name: ClusterName
+        Value:
+          Ref: ECSCluster
+      ComparisonOperator: GreaterThanThreshold
+      MetricName: MemoryReservation
 Outputs:
   ECSClusterName:
     Description: ECS Cluster Name
