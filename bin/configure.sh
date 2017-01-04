@@ -34,7 +34,7 @@ S3_BUCKET_NAME=sample
 echo -e "Enter the name for s3 bucket to store the Cloudformation Templates"
 read S3_BUCKET_NAME
 
-sed -i "s@S3_BUCKET_NAME@${S3_BUCKET_NAME}@g" ngp-stack.yaml
+sed -i -e "s@S3_BUCKET_NAME@${S3_BUCKET_NAME}@g" ngp-stack.yaml
 
 zip deploy/templates.zip ngp-stack.yaml modules/**/*.yaml
 
