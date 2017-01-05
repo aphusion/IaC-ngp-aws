@@ -56,7 +56,7 @@ Resources:
   ECSAutoscalingLC:
     Type: AWS::AutoScaling::LaunchConfiguration
     Properties:
-      AssociatePublicIpAddress: true
+      AssociatePublicIpAddress: false
       ImageId: !FindInMap [AWSRegionToAMI, !Ref 'AWS::Region', AMIID]
       SecurityGroups:
         - !Ref PrivateSecurityGroupID
