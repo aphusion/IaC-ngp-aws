@@ -18,7 +18,16 @@ Parameters:
   PrivateSecurityGroupID:
     Description: Private Security Group ID for instances.
     Type: String
-  ClusterNodeType:
+  TykAPIKey:
+    Description: Provide the Tyk APIKEY.
+    Type: String
+  TykRPCCredential:
+    Description: Provide Tyk RPC Credential.
+    Type: String
+  TykSecret:
+    Description: Provide Tyk Secret Key
+    Type: String
+  RedisNodeType:
     Default: cache.m1.small
     Description: The compute and memory capacity of the nodes in the  Redis Cluster
     Type: String
@@ -40,7 +49,7 @@ Resources:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
       ClusterName: !Join ['', [!Ref 'TagName', '-Redis']]
-      CacheNodeType: !Ref 'ClusterNodeType'
+      CacheNodeType: !Ref 'RedisNodeType'
       Engine: redis
       EngineVersion: '2.8.24'
       NumCacheNodes: '1'
@@ -97,7 +106,7 @@ Resources:
           HostPort: 9090
         Environment:
         - Name: APIKEY
-          Value: api_key
+          Value: !Ref TykAPIKey
         - Name: BINDSLUG
           Value: 1
         - Name: DISABLENGINX
@@ -109,7 +118,9 @@ Resources:
         - Name: RPORT
           Value: 6379
         - Name: SECRET
-          Value: secret
+          Value: !Ref TykSecret
+        - Name: RPCCredential
+          Value: !Ref TykRPCCredential
       Volumes:
       - Name: my-vol
   Tykservice:

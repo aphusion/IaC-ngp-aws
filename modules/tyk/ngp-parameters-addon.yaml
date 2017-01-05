@@ -1,5 +1,14 @@
 
-  ClusterNodeType:
+  TykAPIKey:
+    Description: Provide the Tyk APIKEY.
+    Type: String
+  TykRPCCredential:
+    Description: Provide Tyk RPC Credential.
+    Type: String
+  TykSecret:
+    Description: Provide Tyk Secret Key
+    Type: String
+  RedisNodeType:
     Default: cache.m1.small
     Description: The compute and memory capacity of the nodes in the  Redis Cluster
     Type: String
