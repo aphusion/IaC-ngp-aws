@@ -1,0 +1,7 @@
+
+  ClusterNodeType:
+    Default: cache.m1.small
+    Description: The compute and memory capacity of the nodes in the  Redis Cluster
+    Type: String
+    AllowedValues: [cache.t1.micro, cache.t1.micro, cache.m1.medium, cache.m1.large, cache.m1.xlarge, cache.m2.xlarge, cache.m2.2xlarge, cache.m2.4xlarge, cache.m3.xlarge, cache.c1.xlarge]
+    ConstraintDescription: must select a valid Cache Node type.
