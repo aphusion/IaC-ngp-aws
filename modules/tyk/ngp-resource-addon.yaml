@@ -6,6 +6,7 @@
       Parameters:
         TagName: !Ref 'TagName'
         ECSClusterName: !GetAtt 'ECS.Outputs.ECSClusterName'
+        VPC: !GetAtt 'Infrastructure.Outputs.VPCId'
         PrivateSubnetAZ1: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ1
         PrivateSubnetAZ2: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ2
         PrivateSecurityGroupID: !GetAtt Infrastructure.Outputs.PrivateSecurityGroup

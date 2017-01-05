@@ -6,6 +6,8 @@ Parameters:
   ECSClusterName:
     Type: String
     Description: Name of an existing ECS Cluster.
+  VPC:
+    Description: Provide the VPC ID.
   PrivateSubnetAZ1:
     Description: Availability Zone ID private subnet 1.
     Type: String
@@ -15,7 +17,57 @@ Parameters:
   PrivateSecurityGroupID:
     Description: Private Security Group ID for instances.
     Type: String
+  ClusterNodeType:
+    Default: cache.m1.small
+    Description: The compute and memory capacity of the nodes in the  Redis Cluster
+    Type: String
+    AllowedValues:
+    - cache.t1.micro
+    - cache.m1.small
+    - cache.m1.medium
+    - cache.m1.large
+    - cache.m1.xlarge
+    - cache.m2.xlarge
+    - cache.m2.2xlarge
+    - cache.m2.4xlarge
+    - cache.m3.xlarge
+    - cache.m3.2xlarge
+    - cache.c1.xlarge
+    ConstraintDescription: must select a valid Cache Node type.
 Resources:
+  RedisCluster:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      ClusterName: !Join ['', [!Ref 'TagName', '-Redis']]
+      CacheNodeType: !Ref 'ClusterNodeType'
+      Engine: redis
+      EngineVersion: '2.8.24'
+      NumCacheNodes: '1'
+      Port: '6379'
+      CacheSubnetGroupName: !Ref 'RedisSubnetGroup'
+      VpcSecurityGroupIds: [!GetAtt RedisSecurityGroup.GroupId]
+  RedisSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Redis Security Group
+      VpcId: !Ref 'VPC'
+      Tags:
+        - Key: Name
+          Value: !Join ['', [!Ref 'TagName', '-Redis']]
+  RedisSecurityGroupInbound:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref 'RedisSecurityGroup'
+      IpProtocol: tcp
+      FromPort: '6379'
+      ToPort: '6379'
+      CidrIp: 10.0.0.0/16
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      CacheSubnetGroupName: !Join ['', [!Ref 'TagName', '-Redis']]
+      Description: 'Subnet Group for Redis Cache'
+      SubnetIds: [!Ref 'PrivateSubnetAZ1', !Ref 'PrivateSubnetAZ2']
   CloudwatchLogsGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -52,7 +104,7 @@ Resources:
         - Name: PORT
           Value: 8181
         - Name: REDISHOST
-          Value: resdis_host_name
+          Value: !GetAtt RedisCluster.RedisEndpoint.Address
         - Name: RPORT
           Value: 6379
         - Name: SECRET
