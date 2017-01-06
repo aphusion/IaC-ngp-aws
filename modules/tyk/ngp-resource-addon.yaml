@@ -7,6 +7,13 @@
         TagName: !Ref 'TagName'
         ECSClusterName: !GetAtt 'ECS.Outputs.ECSClusterName'
         VPC: !GetAtt 'Infrastructure.Outputs.VPCId'
+        PublicSubnetAZ1: !GetAtt Infrastructure.Outputs.PublicSubnetAZ1
+        PublicSubnetAZ2: !GetAtt Infrastructure.Outputs.PublicSubnetAZ2
         PrivateSubnetAZ1: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ1
         PrivateSubnetAZ2: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ2
+        PublicSecurityGroupID: !GetAtt Infrastructure.Outputs.PublicSecurityGroup
         PrivateSecurityGroupID: !GetAtt Infrastructure.Outputs.PrivateSecurityGroup
+        TykAPIKey: !Ref 'TykAPIKey'
+        TykRPCCredential: !Ref 'TykRPCCredential'
+        TykSecret: !Ref 'TykSecret'
+        RedisNodeType: !Ref 'RedisNodeType'

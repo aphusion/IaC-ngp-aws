@@ -9,14 +9,23 @@ Parameters:
   VPC:
     Type: String
     Description: Provide the VPC ID.
+  PublicSubnetAZ1:
+    Description: Public Subnet ID in Availability Zone 1.
+    Type: String
+  PublicSubnetAZ2:
+    Description: Public Subnet ID in Availability Zone 2.
+    Type: String
   PrivateSubnetAZ1:
-    Description: Availability Zone ID private subnet 1.
+    Description: Private Subnet ID in Availability Zone 1.
     Type: String
   PrivateSubnetAZ2:
-    Description: Availability Zone ID private subnet 2.
+    Description: Private Subnet ID in Availability Zone 2.
     Type: String
   PrivateSecurityGroupID:
     Description: Private Security Group ID for instances.
+    Type: String
+  PublicSecurityGroupID:
+    Description: Public Security Group ID for instances.
     Type: String
   TykAPIKey:
     Description: Provide the Tyk APIKEY.
@@ -165,10 +174,10 @@ Resources:
         - Key: idle_timeout.timeout_seconds
           Value: '30'
       Subnets: 
-        - !Ref PrivateSubnetAZ1
-        - !Ref PrivateSubnetAZ2
+        - !Ref PublicSubnetAZ1
+        - !Ref PublicSubnetAZ2
       SecurityGroups:
-        - !Ref PrivateSecurityGroupID
+        - !Ref PublicSecurityGroupID
   ALBListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
     DependsOn: ECSServiceRole
