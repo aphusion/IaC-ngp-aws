@@ -10,3 +10,7 @@
         PrivateSubnetAZ1: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ1
         PrivateSubnetAZ2: !GetAtt Infrastructure.Outputs.PrivateSubnetAZ2
         PrivateSecurityGroupID: !GetAtt Infrastructure.Outputs.PrivateSecurityGroup
+        TykAPIKey: !Ref 'TykAPIKey'
+        TykRPCCredential: !Ref 'TykRPCCredential'
+        TykSecret: !Ref 'TykSecret'
+        RedisNodeType: !Ref 'RedisNodeType'

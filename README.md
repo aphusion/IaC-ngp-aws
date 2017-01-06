@@ -1,5 +1,7 @@
 ## IaC NGP AWS - Next Generation platform based on AWS ECS
 
+![Architecture of Next Generation Platform with AWS](/doc/architecture.png)
+
 #### Pre-requisites
 1. Install AWS CLI.
 2. Clone the Repo.
