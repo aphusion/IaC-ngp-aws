@@ -15,10 +15,10 @@ Resources:
   Nginxtaskdefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: Nginx-ng
+      Family: Nginx
       ContainerDefinitions:
       - Name: nginx
-        Cpu: '10'
+        Cpu: '256'
         Essential: 'true'
         Image: nginx
         Memory: '128'
