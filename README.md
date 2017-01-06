@@ -1,6 +1,6 @@
 ## IaC NGP AWS - Next Generation platform based on AWS ECS
 
-![Architecture of Next Generation Platform with AWS](/doc/architecture.png)
+![Architecture of Next Generation Platform with AWS](/doc/NGP_AWS_Architecture.png)
 
 #### Pre-requisites
 - AWS IAM account with administrator privileges (Save your AWS IAM access key ID and secret access key).
