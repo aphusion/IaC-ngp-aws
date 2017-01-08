@@ -1,4 +1,4 @@
-## IaC NGP AWS - Next Generation platform based on AWS ECS
+## Next Gen Platform with AWS
 
 ![Architecture of Next Generation Platform with AWS](/doc/NGP_AWS_Architecture.png)
 
