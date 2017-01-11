@@ -2,3 +2,8 @@
 
 # IDE
 .idea/
+
+*.pem
+
+# Emacs
+*~
