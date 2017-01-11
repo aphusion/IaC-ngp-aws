@@ -34,10 +34,20 @@ Parameters:
     Type: String
 Mappings:
   AWSRegionToAMI:
+    ap-northeast-1:
+        AMIID: ami-30bdce57
     ap-southeast-1:
-      AMIID: ami-a900a3ca
+        AMIID: ami-9f75ddfc
     ap-southeast-2:
-      AMIID: ami-5781be34
+        AMIID: ami-cf393cac
+    us-east-1:
+        AMIID: ami-a58760b3
+    us-east-2:
+        AMIID: ami-a6e4bec3
+    us-west-1:
+        AMIID: ami-74cb9b14
+    us-west-2:
+        AMIID: ami-5b6dde3b
 Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
