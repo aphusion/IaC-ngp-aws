@@ -6,7 +6,8 @@
 - AWS IAM account with administrator privileges (Save your AWS IAM access key ID and secret access key).
 - AWS CLI
 - A S3 bucket to store the templates.
-- Accept Software Terms of AWS Marketplace for CentOS. 
+
+#### Optional
 - Setup Tyk Hybrid account from https://cloud.tyk.io/signup for running Tyk API
 
 #### Steps
